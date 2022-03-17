@@ -1,4 +1,3 @@
-const http = require('http');
 const Koa = require('koa');
 const Router = require('koa-router');
 const cors = require('koa2-cors');
@@ -63,4 +62,3 @@ app.use(router.routes()).use(router.allowedMethods());
 
 const port = process.env.PORT || 7777;
 app.listen(port, () => console.log('server started'));
-server.listen(port, () => console.log('server started'));
