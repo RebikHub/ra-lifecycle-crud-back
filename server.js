@@ -33,8 +33,34 @@ router.delete('/notes/:id', async(ctx, next) => {
     ctx.response.status = 204;
 });
 
+// server for repo: ra-ra-lifecycle-chat
+const messages = [];
+let messageId = 1;
+
+router.get('/messages', async (ctx, next) => {
+    const from = Number(ctx.request.query.from)
+    if (ctx.request.query.from === 0) {
+        ctx.response.body = JSON.stringify(messages);
+        return;
+    }
+
+    const fromIndex = messages.findIndex(o => o.id === from);
+    if (fromIndex === -1) {
+        ctx.response.body = JSON.stringify(messages);
+        return;
+    }
+
+    ctx.response.body = JSON.stringify(messages.slice(fromIndex + 1));
+});
+
+router.post('/messages', async(ctx, next) => {
+    const message = JSON.parse(ctx.request.body);
+    messages.push({data: message, id: messageId++});
+    ctx.response.status = 204;
+});
+
 app.use(router.routes()).use(router.allowedMethods());
 
 const port = process.env.PORT || 7777;
-const server = http.createServer(app.callback());
+app.listen(port, () => console.log('server started'));
 server.listen(port, () => console.log('server started'));
